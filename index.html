@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gửi Tặng Trái Tim</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            overflow: hidden;
+            /* Đổi sang màu Gradient lãng mạn hơn */
+            background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%); 
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: none;
+        }
+
+        .heart {
+            position: absolute;
+            pointer-events: none;
+            background: linear-gradient(45deg, #ff4d4d, #ff8080);
+            display: inline-block;
+            transform: rotate(-45deg);
+            opacity: 0.8;
+            z-index: 1;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: 50%;
+        }
+        .heart::before { top: -50%; left: 0; }
+        .heart::after { left: 50%; top: 0; }
+
+        @keyframes moveUp {
+            0% {
+                transform: translateY(0) rotate(-45deg) scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(-45deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        #message {
+            position: relative;
+            z-index: 10;
+            font-family: 'Arial', sans-serif;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #d63384;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px 30px;
+            border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            max-width: 85%;
+            pointer-events: none;
+            /* Hiệu ứng nhịp đập nhẹ cho lời chúc */
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="message">Chúc em một ngày 8/3 thật hạnh phúc! ❤️</div>
+
+    <script>
+        const HEART_COUNT = 35; 
+        const CLICK_HEART_COUNT = 8;
+
+        function createHeart(x, y, isClick = false) {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            
+            const sizeValue = Math.random() * 12 + 10;
+            heart.style.width = sizeValue + "px";
+            heart.style.height = sizeValue + "px";
+
+            if (isClick) {
+                heart.style.left = x + 'px';
+                heart.style.top = y + 'px';
+            } else {
+                heart.style.left = Math.random() * 95 + 'vw';
+                heart.style.top = '105vh';
+            }
+
+            const duration = Math.random() * 3 + 3 + "s";
+            heart.style.animation = `moveUp ${duration} linear forwards`;
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, parseFloat(duration) * 1000);
+        }
+
+        setInterval(() => {
+            if (document.querySelectorAll('.heart').length < HEART_COUNT) {
+                createHeart();
+            }
+        }, 400);
+
+        window.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            for (let i = 0; i < CLICK_HEART_COUNT; i++) {
+                const offsetX = (Math.random() - 0.5) * 40;
+                const offsetY = (Math.random() - 0.5) * 40;
+                createHeart(touch.clientX + offsetX, touch.clientY + offsetY, true);
+            }
+        });
+
+        window.addEventListener('mousedown', (e) => {
+            for (let i = 0; i < CLICK_HEART_COUNT; i++) {
+                const offsetX = (Math.random() - 0.5) * 40;
+                const offsetY = (Math.random() - 0.5) * 40;
+                createHeart(e.clientX + offsetX, e.clientY + offsetY, true);
+            }
+        });
+    </script>
+</body>
+</html>
